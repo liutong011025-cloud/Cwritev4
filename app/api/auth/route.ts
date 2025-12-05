@@ -3,6 +3,19 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
+    // 检查数据库连接配置
+    if (!process.env.DATABASE_URL) {
+      console.error('DATABASE_URL is not configured')
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Database not configured',
+          hint: 'DATABASE_URL environment variable is missing. Please configure it in Vercel project settings.'
+        },
+        { status: 500 }
+      )
+    }
+
     const body = await request.json()
     const { username, password } = body
 
